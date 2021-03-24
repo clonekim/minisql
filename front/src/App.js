@@ -6,7 +6,7 @@ import {
     Link
 } from 'react-router-dom';
 
-import { Container } from 'react-bootstrap';
+import { Container, Navbar } from 'react-bootstrap';
 
 import Home from './components/Home';
 import IDE from './components/IDE';
@@ -14,7 +14,12 @@ import IDE from './components/IDE';
 
 function App() {
     return (
-        <Container >
+        <>
+        <Navbar bg="light">
+          <Navbar.Brand>MiniSQL</Navbar.Brand>
+        </Navbar>
+
+        <Container fluid="md">
           <Router>
             <Switch>
               <Route path="/" exact>
@@ -27,6 +32,7 @@ function App() {
             </Switch>
           </Router>
         </Container>
+        </>
     );
 }
 

@@ -4,40 +4,47 @@
 
  :objects
  {:Database
-  {:fields
-   {:id {:type Int}
-    :vender {:type Vendor}
-    :url {:type String}
-    :username {:type String}
-    :password {:type String}
-    :created_at {:type String}
-    :updated_at {:type String}}}
+  {:fields {:id {:type Int}
+            :vendor {:type :Vendor}
+            :url {:type String}
+            :username {:type String}
+            :password {:type String}
+            :created_at {:type String}
+            :updated_at {:type String}}}
 
   }
 
 
 
  :queries
- {:getConnection
-  {:type (list :Database)
-   :args {:id {:type Int}}
-   :resolve :get-connections}}
+ {:list {:type (list :Database)
+         :args {:id {:type Int}}
+         :resolve :list-db}
+
+  :meta {:type :Meta}
+ }
 
 
  :mutations
- {:addConnection
+ {:add_db
   {:type :Database
-   :args {:name {:type String}}
-   :resolve :add-connection}
+   :args {:vendor {:type :Vendor}
+          :url {:type String}
+          :username {:type String}
+          :password {:type String}}
+   :resolve :add-db}
 
-  :updateConnection
-  {:type :Database
-   :args {}
-   :resolve :update-connection}
+  :update_db
+  {:type  :Database
+   :args {:id {:type Int}
+          :vendor {:type :Vendor}
+          :url {:type String}
+          :username {:type String}
+          :password {:type String}}
+   :resolve :update-db}
 
-  :removeConnection
+  :rem_db
   {:type Boolean
    :args {:id {:type Int}}
-   :resolve :remove-connection}
-  }
+   :resolve :rem-db}}
  }

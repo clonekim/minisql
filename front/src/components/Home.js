@@ -2,6 +2,8 @@ import React , {useState, useEffect } from 'react';
 import { Card, Button, Form, Row, Col, Modal} from 'react-bootstrap';
 
 
+const vendors = ['ORACLE', 'MySQL', 'PostgreSQL'];
+
 const DatabasePanel = ({name, vendor}) => {
 
   return(
@@ -35,6 +37,7 @@ const BlankPanel = ({handle}) => {
 
 
 const FormPanel = ({handle}) => {
+    const [vendor, setVendor] = useState(null);
   const [url, setUrl ] = useState(null);
   const [username, setUsername ] = useState(null);
   const [password, setPassword ] = useState(null);
@@ -47,13 +50,26 @@ const FormPanel = ({handle}) => {
           <Modal.Title>
           New Database Connection
             </Modal.Title>
-            <button type="button" class="close" onClick={() => handle(false) }>
+            <button type="button" className="close" onClick={() => handle(false) }>
               <span aria-hidden="true">x</span>
             </button>
           </Modal.Header>
           <Modal.Body>
 
             <Form>
+              <Form.Group as={Row}>
+                <Form.Label  column sm="4" controlId="jdbcUrl">
+                 Vendor 
+                </Form.Label>
+                <Col sm="8">
+                  <Form.Control as="select" onChange={e => setVendor(e.target.value)} >
+                      <option/>
+                      {vendors.map(i => <option>{i}</option>)}
+                  </Form.Control>
+                </Col>
+              </Form.Group>
+
+
             <Form.Group as={Row}>
               <Form.Label  column sm="4" controlId="jdbcUrl">
                 JDBC URL
@@ -94,30 +110,30 @@ const FormPanel = ({handle}) => {
 };
 
 function Vendor() {
-  const [dbs, setDbs] = useState([
-    {}
-  ]);
+    const [dbs, setDbs] = useState([
+        {}
+    ]);
 
-  const [isShow, setShow] = useState(false)
+    const [isShow, setShow] = useState(false)
 
-  useEffect(() => {
-    console.log('here')
-  }, [dbs])
+    useEffect(() => {
+        console.log('here')
+    }, [dbs])
 
-  return(
-    <div>
-      {isShow && <FormPanel handle={setShow} />}
-      {!isShow &&
-      <Row>
-        {dbs.map(item => <Col sm="3">
-          {!item.vendor && <BlankPanel handle={setShow}/>}
-          {item.vendor && <DatabasePanel {...item}/> }
-          </Col>
-        )}
-      </Row> }
-    </div>
-  );
+    return(
+        <div>
+            {isShow && <FormPanel handle={setShow} />}
+            {!isShow &&
+             <Row>
+                 {dbs.map(item => <Col sm="3">
+                                      {!item.vendor && <BlankPanel handle={setShow}/>}
+                                      {item.vendor && <DatabasePanel {...item}/> }
+                                  </Col>
+                         )}
+             </Row> }
+        </div>
+    );
 
 }
 
-export default Vendor;
+        export default Vendor;
