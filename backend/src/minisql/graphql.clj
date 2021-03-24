@@ -6,14 +6,17 @@
 
 
 
-(defn get-connections [ context {:keys [id]} _value]
-  (db/get-connections id))
+(defn list-db [ context {:keys [id]} _value]
+  (db/get-dbs id))
 
-(defn update-connection [ context args _value]
-  (db/update-connection args))
+(defn add-db [ context args _value]
+  (db/add-db args))
 
-(defn remove-connection [ context {:keys [id]}_value]
-  (db/remove-connection id))
+(defn update-db [ context args _value]
+  (db/update-db args))
+
+(defn rem-db [context {:keys [id]} _value]
+  (db/rem-db id))
 
 
 (defn init-schema [schema-name]
@@ -21,9 +24,10 @@
       slurp
       edn/read-string
       (attach-resolvers
-       {:getConnections get-connections
-        :updateConnection update-connection
-        :removeConnection remove-connection
+       {:list-db list-db
+        :add-db add-db
+        :update-db update-db
+        :rem-db rem-db
         })
       s/compile)
 )

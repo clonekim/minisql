@@ -15,14 +15,14 @@
 
 
 
-(defn create-db []
+(defn- execute-ddl []
 
   (jdbc/db-do-commands
    db-spec
    (jdbc/create-table-ddl
     :databases
     [[:id "integer primary key autoincrement"]
-     [:vender "varchar(20) not null"]
+     [:vendor "varchar(20) not null"]
      [:url "varchar(100) not null"]
      [:username "varchar(100) not null"]
      [:password "varchar(100) not null"]
@@ -41,13 +41,13 @@
   )
 
 (defn init []
-  (if-not (.exits (File. MINISQL-DB))
+  (when-not (.exists (File. MINISQL-DB))
     (log/debug "create database at" MINISQL-DB)
-    (create-db)))
+    (execute-ddl)))
 
 
 
-(defn get-connections [id]
+(defn get-dbs [id]
   (if (nil? id)
     (jdbc/query db-spec
                 (if (nil? id)
@@ -55,26 +55,30 @@
                   ["select * from databases where id =? " id]))))
 
 
-(defn add-connection [args]
+(defn add-db [{:keys [vendor] :as args}]
   (let [now (java.util.Date.)
-        params (assoc args :created_at now :updated_at now)
-        id (-> (jdbc/insert! db-spec :databases params)
+        param (assoc args
+                     :vendor (name vendor)
+                     :created_at now
+                     :updated_at now)
+        id (-> (jdbc/insert! db-spec :databases param)
                first
-               (keyword "last_insert_id()"))]
+               (get (keyword "last_insert_rowid()")))]
+    (log/debug "inserted" id)
+    (assoc param :id id)))
 
-    (assoc params :id id)))
 
-
-(defn update-connection [{:keys [id] :as args}]
+(defn update-db [{:keys [id] :as args}]
   (let [now (java.util.Date.)
         param (assoc args :updated_at args)
         id (-> (jdbc/update! db-spec param ["id=?" id])
                first)]
+    (log/debug "update record (count:" id ")")
     param))
 
 
 
-(defn remove-connection [id]
+(defn rem-db [id]
   (-> (jdbc/delete! db-spec :databases ["id=?" id])
       first
       pos?))

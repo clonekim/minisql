@@ -28,9 +28,10 @@
       (handler req)
       (catch Throwable t
         (log/error t)
-        (-> (response (json/write-str
-                       {:errors
-                        {:message (or (.getMessage t) "Internal Server Error")}}))
+        (-> {:errors
+             {:message (or (.getMessage t) "Internal Server Error")}}
+            json/write-str
+            response
             (status 500))))))
 
 
@@ -90,14 +91,16 @@
 
 
 (defmethod ig/halt-key! :nrepl/server [_ server]
-  (do
+  (when server
     (nrepl/stop-server server)
-    (log/info "HTTP server stopped")))
+    (log/info "nREPL server stopped")))
 
 
 ;; DB
 (defmethod ig/init-key :db/init [_ _]
   (db/init))
+
+
 
 ;;Commands
 
