@@ -1,0 +1,19 @@
+$spacer: 0.7rem;
+$border-radius: 0;
+
+
+$line-height-lgj:     1.2 !default;
+$line-height-sm:     1.2 !default;
+
+$input-btn-padding-y:         .2rem !default;
+$input-btn-padding-x:         .3rem !default;
+
+$font-size-base: 0.9rem !default;
+
+
+
+
+$label-margin-bottom:                   .1rem !default;
+$form-group-margin-bottom:              .3rem !default;
+$form-text-margin-top:                  .1rem !default;
+@import "~bootstrap/scss/bootstrap";

@@ -1,0 +1,5 @@
+{:http/graphql {:schema "schema.edn" }
+ :http/server  {:port 8080  :handler #ig/ref :handler/app}
+ :nrepl/server  {:port 7000 }
+ :db/init {}
+ :handler/app  {:schema #ig/ref :http/graphql}}

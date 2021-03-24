@@ -1,0 +1,14 @@
+*.log
+*.jar
+*.class
+*.lock
+*.iml
+
+build
+target
+node_modules
+.idea
+.vscode
+.project
+
+.DS_Store
