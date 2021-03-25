@@ -18,6 +18,9 @@
 (defn rem-db [context {:keys [id]} _value]
   (db/rem-db id))
 
+(defn meta-query [context args _value]
+  (db/meta-query args))
+
 
 (defn init-schema [schema-name]
   (-> (clojure.java.io/resource schema-name)
@@ -28,6 +31,7 @@
         :add-db add-db
         :update-db update-db
         :rem-db rem-db
+        :meta-query meta-query
         })
       s/compile)
 )

@@ -1,7 +1,8 @@
 (ns minisql.db
   (:require [clojure.tools.logging :as log]
             [clojure.java.jdbc :as jdbc])
-  (:import [java.io File]))
+  (:import [java.io File]
+           [java.sql DriverManager]))
 
 
 (defonce MINISQL-DB
@@ -48,11 +49,10 @@
 
 
 (defn get-dbs [id]
-  (if (nil? id)
-    (jdbc/query db-spec
-                (if (nil? id)
-                  ["select * from databases"]
-                  ["select * from databases where id =? " id]))))
+  (jdbc/query db-spec
+              (if (nil? id)
+                ["select * from databases"]
+                ["select * from databases where id =? " id])))
 
 
 (defn add-db [{:keys [vendor] :as args}]
@@ -82,3 +82,38 @@
   (-> (jdbc/delete! db-spec :databases ["id=?" id])
       first
       pos?))
+
+
+(defn- get-catalog [^java.sql.DatabaseMetaData meta]
+  (let [resultSet (-> meta .getCatalogs)]
+    (loop [v []]
+      (if (-> resultSet .next)
+        (recur
+         (conj v (.getString resultSet 1)))
+        (first v)))))
+
+
+(defn- get-columns [ meta cat schema table-name]
+  (let [result (.getColumns meta cat schema table-name nil)]
+    (loop [v []]
+      (if (-> result .next)
+        (recur
+         (conj v {:name  (.toUpperCase (.getString result "COLUMN_NAME" ))
+                  :nullable (.getBoolean result "NULLABLE")
+                  :autoIncrement (.getBoolean result "IS_AUTOINCREMENT")
+                  :typeName (.getString result "TYPE_NAME")
+                  :dataType (.getString result "DATA_TYPE")
+                  :size (.getInt result "COLUMN_SIZE")
+                  :bufferLength (.getInt result "BUFFER_LENGTH")
+                  }))
+        v))))
+
+
+(defn meta-query [{:keys [id package schema pojo sql name]}]
+  (if-let [db (first (get-dbs id))]
+    (let [conn (DriverManager/getConnection (:url db) (:username db) (:password db))
+          meta (-> conn .getMetaData)
+          cat (get-catalog meta)]
+
+      {:name name
+       :columns (get-columns meta cat schema name)})))

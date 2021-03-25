@@ -12,6 +12,18 @@
             :created_at {:type String}
             :updated_at {:type String}}}
 
+  :Column
+  {:fields {:name {:type String}
+            :dataType {:type Int}
+            :typeName {:type String}
+            :nullable {:type Boolean}
+            :autoIncrement {:type Boolean}
+            :size {:type Int}
+            :primaryKey {:type Boolean}}}
+
+  :Table
+  {:fields {:name {:type String}
+            :columns {:type (list :Column)}}}
   }
 
 
@@ -21,7 +33,12 @@
          :args {:id {:type Int}}
          :resolve :list-db}
 
-  :meta {:type :Meta}
+  :meta {:type :Table
+         :args {:id {:type Int}
+                :package {:type String}
+                :pojo {:type String}
+                :sql {:type String}}
+         :resolve :meta-query}
  }
 
 
