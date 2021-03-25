@@ -15,7 +15,9 @@
                  [ch.qos.logback/logback-classic "1.2.3"]
                  [org.xerial/sqlite-jdbc "3.6.20"]
                  [http-kit/http-kit "2.5.3"]
-                 [com.walmartlabs/lacinia "0.38.0"]]
+                 [com.walmartlabs/lacinia "0.38.0"]
+                 [org.postgresql/postgresql "42.2.19"]
+                 [com.oracle.database.jdbc/ojdbc8 "21.1.0.0"]]
   :repl-options {:init-ns minisql.core}
   :main minisql.core
   :profiles {:uberjar
