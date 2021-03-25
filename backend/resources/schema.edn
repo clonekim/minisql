@@ -35,8 +35,8 @@
 
   :meta {:type :Table
          :args {:id {:type Int}
-                :package {:type String}
-                :pojo {:type String}
+                :schema {:type String}
+                :name {:type String}
                 :sql {:type String}}
          :resolve :meta-query}
  }
